@@ -1,65 +1,59 @@
-import Image from "next/image";
+"use client";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
 
-export default function Home() {
+// Neo-minimalist animation physics
+const fadeUp = {
+  hidden: { opacity: 0, y: 60 },
+  visible: { opacity: 1, y: 0, transition: { duration: 1, ease: [0.16, 1, 0.3, 1] } }
+};
+
+export default function VibeLabsHero() {
+  const containerRef = useRef(null);
+  const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start start", "end start"] });
+  const yParallax = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div className="relative min-h-[200vh] bg-[#050505] text-[#ededed] font-sans selection:bg-white selection:text-black" ref={containerRef}>
+      
+      {/* Minimalist Header */}
+      <nav className="fixed top-0 w-full p-8 flex justify-between items-center z-50 mix-blend-difference">
+        <motion.div initial={{opacity: 0}} animate={{opacity: 1}} transition={{duration: 1.5}} className="text-xl font-extrabold tracking-tighter">
+          VIBELABS<span className="text-gray-500">.</span>
+        </motion.div>
+        <motion.button initial={{opacity: 0}} animate={{opacity: 1}} className="text-xs uppercase tracking-[0.3em] hover:text-gray-400 transition-colors">
+          Menu / +
+        </motion.button>
+      </nav>
+
+      {/* Hero Section with Parallax */}
+      <motion.section style={{ y: yParallax }} className="h-screen flex flex-col justify-center px-8 md:px-24 pt-20">
+        <motion.div initial="hidden" animate="visible" variants={{ visible: { transition: { staggerChildren: 0.15 } } }}>
+          <motion.p variants={fadeUp} className="text-sm uppercase tracking-[0.3em] text-gray-500 mb-6">
+            Digital Architecture
+          </motion.p>
+          <motion.h1 variants={fadeUp} className="text-6xl md:text-[9rem] font-black tracking-tighter leading-[0.85]">
+            MOTION<br/>
+            <span className="italic font-serif text-gray-400 font-light">TECHNOLOGY.</span>
+          </motion.h1>
+          <motion.p variants={fadeUp} className="mt-12 text-lg md:text-xl max-w-md text-gray-400 font-light leading-relaxed">
+            Crafting award-winning digital experiences. We blend neo-minimalism with fluid physics to build the web of tomorrow.
+          </motion.p>
+        </motion.div>
+      </motion.section>
+
+      {/* Content Reveal Section */}
+      <section className="relative z-10 bg-[#050505] py-32 px-8 md:px-24">
+        <motion.div 
+          initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeUp}
+          className="border-t border-white/10 pt-16 grid grid-cols-1 md:grid-cols-2 gap-16"
+        >
+          <h2 className="text-4xl md:text-6xl font-bold tracking-tighter">OUR WORK.</h2>
+          <p className="text-gray-400 text-lg leading-relaxed">
+            Content managed directly via your custom backend. Simply navigate to <a href="/studio" className="text-white underline underline-offset-4 decoration-white/30 hover:decoration-white transition-all">/studio</a> to securely add new projects, update text, and control the motion narrative of your site.
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+        </motion.div>
+      </section>
     </div>
   );
 }
